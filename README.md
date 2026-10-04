@@ -92,11 +92,16 @@ test('Verify registration with OTP code', async ({ page, request }) => {
 
 ## 💰 Pricing & Plans
 
-| Plan | Monthly Fee | Included Inbound Emails | Parallel Mailboxes | Scope |
-| :--- | :--- | :--- | :--- | :--- |
-| **Free** | **$0** | **100 / mo** | 2 Workers | Free forever, no credit card required |
-| **Developer** | **$19** | **10,000 / mo** | 10 Workers | Single project CI suite |
-| **Team** | **$49** | **50,000 / mo** | 50 Workers | Up to 5 isolated projects, .COM domains |
+| Plan | Monthly Fee | Account Inbound Emails | Concurrent Test Runs | Ephemeral Addresses | Retention (Raw MIME) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Free** | **$0** | **100 / mo across account** | **2 concurrent runs** | Unique per run (auto-cleaned) | Max 24h (purge on pass) |
+| **Developer** | **$19** | **10,000 / mo across account** | **10 concurrent runs** | Unique per run (auto-cleaned) | 24h default (up to 72h debug) |
+| **Team** | **$49** | **50,000 / mo across account** | **50 concurrent runs** | Unique per run (auto-cleaned) | 24h default (up to 7d debug) |
+
+- **Account-wide Quota:** Limits apply to total received & stored messages across all test addresses and namespaces.
+- **Capacity Add-on:** `$10 / 10,000 emails`
+- **Official Documentation:** [https://getotp.ccwu.cc/verify](https://getotp.ccwu.cc/verify)
+- **Pricing Details:** [https://getotp.ccwu.cc/pricing](https://getotp.ccwu.cc/pricing)
 
 - **Capacity Add-on:** `$10 / 10,000 emails`
 - **Official Documentation:** [https://getotp.ccwu.cc/verify](https://getotp.ccwu.cc/verify)
