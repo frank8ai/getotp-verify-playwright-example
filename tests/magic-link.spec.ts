@@ -13,7 +13,7 @@ test.describe('Passwordless Magic Link Suite', () => {
     expect(inbox.jwt).toBeTruthy();
 
     // 2. Fetch mails and pattern match auth link
-    const pollRes = await request.get(`${GETOTP_BASE}/api/mails`, {
+    const pollRes = await request.get(`${GETOTP_BASE}/api/mails?limit=10&offset=0`, {
       headers: { Authorization: `Bearer ${inbox.jwt}` }
     });
     expect(pollRes.ok()).toBe(true);
