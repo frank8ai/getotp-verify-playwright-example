@@ -1,0 +1,26 @@
+{
+  "name": "getotp-verify-playwright-example",
+  "version": "1.0.0",
+  "description": "Production-ready Playwright email OTP and magic-link verification test suite using GetOTP Verify API",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report"
+  },
+  "keywords": [
+    "playwright",
+    "email-testing",
+    "otp",
+    "magic-link",
+    "ci",
+    "getotp"
+  ],
+  "author": "GetOTP Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.0.0"
+  }
+}
