@@ -1,0 +1,7 @@
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+pnpm-lock.yaml
+package-lock.json
