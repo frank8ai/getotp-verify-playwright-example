@@ -1,0 +1,7 @@
+schemaVersion: acceptance-contract/v0
+protocol: EXPLICIT_SCRIPT
+condition: npm test
+baselineExpected: DEFECT_ABSENT
+candidateExpected: DEFECT_ABSENT
+source: BASE_BRANCH_TRUSTED
+description: Continuous regression guard ensuring Playwright example tests pass without regressions

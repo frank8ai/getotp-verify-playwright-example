@@ -1,0 +1,98 @@
+name: AER PR Interactive Command Plane
+
+# AER CodeRabbit-grade Interactive PR Command Plane
+# Responds to @aer-bot slash commands and checkbox events on PR comments.
+
+on:
+  issue_comment:
+    types: [created, edited]
+  pull_request_review_comment:
+    types: [created, edited]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  interactive:
+    name: Handle PR review command
+    runs-on: ubuntu-latest
+    # Execute only on pull requests with @aer-bot mention or checkbox interaction
+    if: |
+      (github.event.issue.pull_request != null || github.event.pull_request != null) &&
+      (contains(github.event.comment.body, '@aer-bot') || contains(github.event.comment.body, '[x] Apply fix'))
+    steps:
+      - name: Ensure GitHub CLI is installed
+        run: |
+          if ! command -v gh &> /dev/null; then
+            GH_VER="2.68.0"
+            curl -fsSL "https://github.com/cli/cli/releases/download/v${GH_VER}/gh_${GH_VER}_linux_amd64.tar.gz" -o "$RUNNER_TEMP/gh.tar.gz"
+            tar -xzf "$RUNNER_TEMP/gh.tar.gz" -C "$RUNNER_TEMP"
+            mkdir -p "$HOME/.local/bin"
+            cp "$RUNNER_TEMP/gh_${GH_VER}_linux_amd64/bin/gh" "$HOME/.local/bin/gh"
+            chmod +x "$HOME/.local/bin/gh"
+            echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Save event payload for inspection
+        run: |
+          mkdir -p "$RUNNER_TEMP/aer"
+          echo '${{ toJson(github.event) }}' > "$RUNNER_TEMP/aer/event.json"
+
+      - name: Verify collaborator permissions & parse command
+        id: guard
+        shell: pwsh
+        run: |
+          ./scripts/guard-command-permissions.ps1 -PayloadPath "$env:RUNNER_TEMP/aer/event.json"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install CI dependencies
+        run: |
+          python -m pip install --disable-pip-version-check pyyaml jsonschema
+          python -m pip install --disable-pip-version-check tools/aer-dist/aer_decision_engine-6.4.0-py3-none-any.whl
+
+      - name: Execute command
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          $event = Get-Content -Raw "$env:RUNNER_TEMP/aer/event.json" | ConvertFrom-Json
+          $prNumber = if ($event.issue -and $event.issue.pull_request) {
+              [int]$event.issue.number
+          } elseif ($event.pull_request) {
+              [int]$event.pull_request.number
+          } else {
+              0
+          }
+
+          if ($prNumber -le 0) {
+              Write-Host "AER_INTERACTIVE: Non-PR comment, skipping dispatch."
+              exit 0
+          }
+
+          $commentBody = if ($event.comment) { [string]$event.comment.body } else { "" }
+          $commentAuthor = if ($event.comment -and $event.comment.user) { [string]$event.comment.user.login } else { "" }
+          $authorAssoc = if ($event.comment) { [string]$event.comment.author_association } else { "NONE" }
+          $isPrAuthor = $false
+          if ($event.issue -and $event.issue.user -and $commentAuthor) {
+              $isPrAuthor = ($event.issue.user.login -eq $commentAuthor)
+          }
+
+          ./scripts/handle-review-comments.ps1 `
+            -CommentBody $commentBody `
+            -CommentAuthor $commentAuthor `
+            -AuthorAssociation $authorAssoc `
+            -Repo $env:GITHUB_REPOSITORY `
+            -PrNumber $prNumber `
+            -IsPrAuthor:$isPrAuthor `
+            -Execute
