@@ -1,0 +1,33 @@
+name: AER Verify
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  aer-verify:
+    name: AER Verify Acceptance Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Run AER Verify
+        uses: frank8ai/aer-verify-action@v0.1.0-beta.1
+        with:
+          contract-path: .aer/acceptance/health-contract.yml
+          evidence-path: artifacts/aer/acceptance-evidence.json
+          brief-path: artifacts/aer/acceptance-brief.md
+
+      - name: Upload Acceptance Evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aer-acceptance-evidence
+          path: artifacts/aer/

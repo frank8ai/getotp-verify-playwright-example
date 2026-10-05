@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "review-rules/v1",
+  "rules": [
+    {
+      "path": "src/**",
+      "rule": "Client helper integrity: strictly avoid logging OTP codes or JWTs; preserve typed error handling and timeout bounds."
+    },
+    {
+      "path": "tests/**",
+      "rule": "Playwright test suite safety: ensure test isolation; avoid flaky assertions; do not tautologically assert True."
+    }
+  ]
+}
