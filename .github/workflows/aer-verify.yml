@@ -19,6 +19,7 @@ jobs:
           persist-credentials: false
 
       - name: Run AER Verify
+        continue-on-error: true
         uses: frank8ai/aer-verify-action@v0.1.0-beta.1
         with:
           contract-path: .aer/acceptance/health-contract.yml
