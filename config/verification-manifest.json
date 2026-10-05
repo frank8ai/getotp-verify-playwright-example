@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "repoKey": "frank8ai/getotp-verify-playwright-example",
+  "environment": {
+    "runtime": "node",
+    "requiredVersion": "20",
+    "lockFile": "pnpm-lock.yaml"
+  },
+  "gates": [
+    {
+      "id": "playwright-tests",
+      "command": "npm test",
+      "required": true,
+      "tier": "cheap"
+    }
+  ],
+  "baselinePolicy": {
+    "tierDefault": "cheap"
+  }
+}
