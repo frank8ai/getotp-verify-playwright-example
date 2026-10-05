@@ -3,16 +3,14 @@
 [![Playwright Tests](https://github.com/frank8ai/getotp-verify-playwright-example/actions/workflows/playwright.yml/badge.svg)](https://github.com/frank8ai/getotp-verify-playwright-example/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-> Production-ready, zero-flaky email authentication testing suite for [Playwright](https://playwright.dev/) using **[GetOTP Verify](https://getotp.ccwu.cc/verify)**.
+> Automated email authentication testing suite for [Playwright](https://playwright.dev/) using **[GetOTP Verify](https://getotp.ccwu.cc/verify)**.
 
 ---
 
 ## ⚡ What is GetOTP Verify?
 **GetOTP Verify** is an inbound email testing infrastructure designed for developers and CI/CD pipelines:
 - **Instant Inboxes:** Create isolated, ephemeral inboxes in a single API call (`POST /api/new_address`).
-- **Zero Flakiness:** Isolated test addresses prevent cross-worker message collision in parallel runs.
 - **Auto OTP & Magic Link Extraction:** Pattern-match 4–8 digit verification codes and login tokens in real-time.
-- **AI Agent Native:** Built-in support for autonomous agents, Webhooks, and machine-readable OpenAPI specs.
 - **Authentication-Testing Primitive:** Bounded HTTP polling helper with scoped candidate matching, disambiguation, and typed actionable errors.
 
 ---
@@ -133,8 +131,8 @@ test('Verify registration with OTP code', async ({ page, request }) => {
 | Plan | Monthly Fee | Account Inbound Emails | Concurrent Test Runs | Ephemeral Addresses | Retention (Raw MIME) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Free** | **$0** | **100 / mo across account** | **2 concurrent runs** | Unique per run (auto-cleaned) | Max 24h (purge on pass) |
-| **Developer** | **$19** | **10,000 / mo across account** | **10 concurrent runs** | Unique per run (auto-cleaned) | 24h default (up to 72h debug) |
-| **Team** | **$49** | **50,000 / mo across account** | **50 concurrent runs** | Unique per run (auto-cleaned) | 24h default (up to 7d debug) |
+| **Developer** | **$19** | **10,000 / mo across account** | **10 concurrent runs** | Unique per run (auto-cleaned) | 24h retention |
+| **Team** | **$49** | **50,000 / mo across account** | **50 concurrent runs** | Unique per run (auto-cleaned) | 24h retention |
 
 - **Account-wide Quota:** Limits apply to total received & stored messages across all test addresses and namespaces.
 - **Capacity Add-on:** `$10 / 10,000 emails`
